@@ -10,12 +10,11 @@ module.exports = {
   tableName: 'friends',
 
   attributes: {
-    id: { type: 'integer', primaryKey: true },
+    id: {type: 'integer', primaryKey: true},
     id_user: {
       type: 'integer',
       model: 'user'
     },
-    id_friend: { type: 'integer' }
+    id_friend: {type: 'integer'}
   }
 };
-
