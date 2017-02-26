@@ -17,7 +17,7 @@
  *   http://sailsjs.org/documentation/anatomy/my-app/tasks/register/build-js
  *
  */
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   grunt.registerTask('build', [
     'compileAssets',
     'linkAssetsBuild',

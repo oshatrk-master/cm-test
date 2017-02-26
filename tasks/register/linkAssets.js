@@ -11,7 +11,7 @@
  *   http://sailsjs.org/documentation/anatomy/my-app/tasks/register/link-assets-js
  *
  */
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   grunt.registerTask('linkAssets', [
     'sails-linker:devJs',
     'sails-linker:devStyles',

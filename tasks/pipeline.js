@@ -51,25 +51,20 @@ var templateFilesToInject = [
 ];
 
 
-
-
-
-
-
 // Default path for public folder (see documentation for more information)
 var tmpPath = '.tmp/public/';
 
 // Prefix relative paths to source files so they point to the proper locations
 // (i.e. where the other Grunt tasks spit them out, or in some cases, where
 // they reside in the first place)
-module.exports.cssFilesToInject = cssFilesToInject.map(function(cssPath) {
+module.exports.cssFilesToInject = cssFilesToInject.map(function (cssPath) {
   return require('path').join('.tmp/public/', cssPath);
 });
-module.exports.jsFilesToInject = jsFilesToInject.map(function(jsPath) {
+module.exports.jsFilesToInject = jsFilesToInject.map(function (jsPath) {
   return require('path').join('.tmp/public/', jsPath);
 });
-module.exports.templateFilesToInject = templateFilesToInject.map(function(tplPath) {
-  return require('path').join('assets/',tplPath);
+module.exports.templateFilesToInject = templateFilesToInject.map(function (tplPath) {
+  return require('path').join('assets/', tplPath);
 });
 
 

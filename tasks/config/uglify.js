@@ -9,7 +9,7 @@
  *   https://github.com/gruntjs/grunt-contrib-uglify
  *
  */
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
   grunt.config.set('uglify', {
     dist: {
