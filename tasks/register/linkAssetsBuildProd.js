@@ -10,7 +10,7 @@
  *   http://sailsjs.org/documentation/anatomy/my-app/tasks/register/link-assets-build-prod-js
  *
  */
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   grunt.registerTask('linkAssetsBuildProd', [
     'sails-linker:prodJsRelative',
     'sails-linker:prodStylesRelative',
