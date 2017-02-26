@@ -14,7 +14,7 @@
  *   https://github.com/gruntjs/grunt-contrib-cssmin
  *
  */
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
   grunt.config.set('cssmin', {
     dist: {

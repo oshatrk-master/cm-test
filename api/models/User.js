@@ -10,17 +10,16 @@ module.exports = {
   tableName: 'users',
 
   attributes: {
-    id: { type: 'integer', primaryKey: true },
-    username: { type: 'string' },
-    firstname: { type: 'string' },
-    lastname: { type: 'string' },
-    email: { type: 'string' },
-    active: { type: 'boolean' },
-    password: { type: 'string' },
+    id: {type: 'integer', primaryKey: true},
+    username: {type: 'string'},
+    firstname: {type: 'string'},
+    lastname: {type: 'string'},
+    email: {type: 'string'},
+    active: {type: 'boolean'},
+    password: {type: 'string'},
     friends: {
       collection: 'friend',
       via: 'id_user'
     }
   }
 };
-

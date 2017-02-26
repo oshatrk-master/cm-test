@@ -27,7 +27,7 @@
  *   https://github.com/Zolmeister/grunt-sails-linker
  *
  */
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
   grunt.config.set('sails-linker', {
     devJs: {

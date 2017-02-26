@@ -11,7 +11,7 @@
  *   http://sailsjs.org/documentation/anatomy/my-app/tasks/register/compile-assets-js
  *
  */
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   grunt.registerTask('compileAssets', [
     'clean:dev',
     'jst:dev',
