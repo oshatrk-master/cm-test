@@ -1,0 +1,7 @@
+--require chai
+--reporter spec
+--ui bdd
+--globals sails
+--slow 1000
+--require ts-node/register
+--require ./test/mocha-prepare.js
