@@ -27,9 +27,31 @@
     "sails-disk": "~0.10.9",
     "sails-postgresql": "^0.11.3"
   },
+  "devDependencies": {
+    "@types/chai": "^3.4.35",
+    "@types/mocha": "^2.2.39",
+    "@types/sinon": "^1.16.35",
+    "@types/supertest": "^2.0.0",
+    "@types/webdriverio": "^4.5.2",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "mocha-prepare": "0.0.1",
+    "sinon": "^1.17.7",
+    "supertest": "^3.0.0",
+    "ts-node": "^2.1.0",
+    "typescript": "^2.2.1",
+    "wdio-mocha-framework": "^0.5.8",
+    "wdio-phantomjs-service": "^0.2.2",
+    "wdio-spec-reporter": "0.0.5",
+    "webdriverio": "^4.6.2"
+  },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "mocha test/unit/**/*.test.ts test/integration/**/*.test.ts",
+    "test-acceptance": "mocha test/unit/acceptance/**/*.test.ts test/integration/acceptance/**/*.test.ts",
+    "test-e2e": "./node_modules/.bin/wdio test/wdio.conf.js",
+    "test-e2e-acceptance": "./node_modules/.bin/wdio test/wdio.conf-acceptance.js"
   },
   "main": "app.js",
   "repository": {
