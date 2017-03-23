@@ -127,3 +127,4 @@ test/e2e/errorShots/**
 nbproject
 .idea
 .node_history
+.c9
