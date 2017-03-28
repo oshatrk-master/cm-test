@@ -2,4 +2,20 @@ extends ../layout
 
 block body
   .alert.alert-success(role="alert")
-    | Регистрация нового пользователя прошла успешно. Для активации пользователя пройдите по ссылке отправленной Вам по электронной почте.
+    | Регистрация нового пользователя прошла успешно.
+    | Для активации пользователя пройдите по ссылке отправленной Вам по электронной почте.
+
+  if unknownMailer
+    p Вероятно, ваш почтовый сервер находится по адресу:
+      p
+        a(href=unknownMailer)= unknownMailer
+
+  p Ссылки на известные почтовые системы:
+  each mailer in mailers
+    p
+      if mailer === 'https://mail.ru/'
+        img(src='https://m.mail.ru/favicon.ico',height='20px')
+      else
+        img(src=mailer+'favicon.ico',height='20px')
+      span &nbsp;
+      a(href=mailer)= mailer

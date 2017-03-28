@@ -21,4 +21,9 @@ module.exports = {
   //   connection: 'someMongodbServer'
   // }
 
+  cloudmapsEmails: {
+    // Адрес отправителя письма с подтверждением почты пользователя:
+    confirmation: 'test@cloudmaps.ru'
+  }
+
 };

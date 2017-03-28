@@ -24,7 +24,8 @@ describe('UserController.register()', function () {
           return false;
         }
       }, {
-        view: view
+        view: view,
+        locals: {}
       });
       assert.ok(view.called);
       done();

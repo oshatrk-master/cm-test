@@ -8,15 +8,22 @@ block body
         .panel-heading
           h1.panel-title Введите логин и пароль
         .panel-body
+          if flash.justactivated
+            .alert.alert-success(role="alert")= __('Your account is activated successfully')
+          if flash.error
+            .alert.alert-danger(role="alert")= flash.error.message
           form.form-horizontal(action="", method="POST")
             .form-group
               label.col-sm-2(for="login") Логин
               .col-sm-10
-                input#login.form-control(type="text", name="username", required)
+                input#login.form-control(type="text", name="username", required,
+                                         value=flash.user.username,
+                                         autofocus=!flash.justactivated)
             .form-group
               label.col-sm-2(for="password") Пароль
               .col-sm-10
-                input#password.form-control(type="password", name="password", required)
+                input#password.form-control(type="password", name="password", required,
+                                            autofocus=!!flash.justactivated)
             .form-group
               .col-sm-12
                 input.form-control(type="submit", value="Войти")

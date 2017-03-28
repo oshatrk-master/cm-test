@@ -47,12 +47,16 @@ Browser                           UserController  Waterline  nodemailer
   |                             |      |<-+ 
   |                             |<-----+
   |                             |
+  |           [ UserController.after_register() ]
+  |                             |
   | res.view('/after_register') |
   |<----------------------------+
 
   Затем пользователь открывает свой почтовый ящик
   и переходит по предложенной в письме ссылке:
   
+Browser                           UserController  Waterline  nodemailer
+  |                                 |               |          |
   |   GET /register/?id=...&t=...   |               |          |
   +-------------------------------->|               |          |
   |                                 | User.findOne()|          |
@@ -76,6 +80,8 @@ Browser                           UserController  Waterline  nodemailer
 2. Если произошла ошибка при обработке запроса `GET /register/?id=...&t=...`.
 Например, при работе с базой данных (поиске, либо обновлении записи о пользователе):
 ```
+Browser                           UserController  Waterline  nodemailer
+  |                                 |               |          |
   |                                 |  error  
   |                                 |<-------O
   |  res.view('/user/error',        |               |          |
@@ -87,6 +93,8 @@ Browser                           UserController  Waterline  nodemailer
 при разборе параметров запроса или при работе с базой данных
 (при создании, либо удалении записи о пользователе):
 ```
+Browser                           UserController  Waterline  nodemailer
+  |                                 |               |          |
   |                                 |  error  
   |                                 |<-------O
   |                                 |
@@ -107,6 +115,9 @@ Browser                           UserController  Waterline  nodemailer
 4. Если произошла ошибка при отправке почтового сообщения (пример ошибки,
 возникающей при обработке другой ошибки в обработчике `POST /register`):
 ```
+Browser                           UserController  Waterline  nodemailer
+  |                                 |               |          |
+  |                                 |                          |
   |                                 |          error           |
   |                                 |<-------------------------+
   |                                 |
@@ -115,7 +126,7 @@ Browser                           UserController  Waterline  nodemailer
   |                                 |<-+                  model}
   |                                 |
   |                                 | Удаляем только-что созданную запись:
-  |                                 | User.delete()
+  |                                 | User.destroy()
   |                                 +-------------->|
   |                                 |<--------------+
   |                                 | Если при удалении записи произойдет

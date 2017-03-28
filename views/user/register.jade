@@ -6,11 +6,21 @@ block body
       .navbar-header
         span.navbar-brand Регистрация
 
+  if flash.error
+    .alert.alert-danger(role="alert")= flash.error.message
+      if flash.error.code === 'E_VALIDATION'
+        each errors, errAttr in flash.error.invalidAttributes
+          //- p= '[ ' + errAttr + ' ]:'
+          pre
+            each err in errors
+              span= err.message
+
   form.form-horizontal(action="", method="POST")
     .form-group
       label.col-sm-3(for="username") Логин
       .col-sm-9
-        input#username.form-control(type="text", name="username", placeholder="Логин", required)
+        input#username.form-control(type="text", name="username", placeholder="Логин", required, 
+                                    value=flash.user.username)
     .form-group
       label.col-sm-3(for="pasword") Пароль
       .col-sm-9
@@ -18,14 +28,17 @@ block body
     .form-group
       label.col-sm-3(for="firstname") Имя
       .col-sm-9
-        input#firstname.form-control(type="text", name="firstname", placeholder="Имя", required)
+        input#firstname.form-control(type="text", name="firstname", placeholder="Имя", required,
+                                     value=flash.user.firstname)
     .form-group
       label.col-sm-3(for="lastname") Фамилия
       .col-sm-9
-        input#lastname.form-control(type="text", name="lastname", placeholder="Фамилия")
+        input#lastname.form-control(type="text", name="lastname", placeholder="Фамилия",
+                                    value=flash.user.lastname)
     .form-group
       label.col-sm-3(for="email") Электронная почта
       .col-sm-9
-        input#email.form-control(type="email", name="email", placeholder="Электронная почта", required)
+        input#email.form-control(type="email", name="email", placeholder="Электронная почта", required,
+                                 value=flash.user.email)
     .form-group
       input(type="submit", value="Зарегистрироваться")
