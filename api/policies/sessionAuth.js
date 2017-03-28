@@ -14,11 +14,12 @@ module.exports = function (req, res, next) {
   if (req.session.user) {
 
     if (!req.session.user.active) {
-      // Если email пользователя не активирован, то
+      // Если email пользователя не активирован, то разлогинить его и
       // направить его на страницу перехода на почтовик
-      // (эта проверка, такая же как и в UserController/login.js, сработает
+      // (эта проверка, похожая на ту, что в UserController/login.js, сработает
       // здесь, например, в случае, если администратор отменит подтверждение 
       // почты пользователя):
+      delete req.session.user; 
       req.session.flash = {
         email: req.session.user.email
       };
