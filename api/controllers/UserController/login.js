@@ -52,7 +52,7 @@ function login_POST(req, res) {
     }
     if (!user.active) {
       // Если пользователь еще не активировал свой email,
-      // направить его на страницу перехода на почтовик: 
+      // направить его на страницу перехода на почтовик:
       req.session.flash = {
         email: user.email
       };
@@ -71,7 +71,7 @@ function login_GET(req, res) {
 
   if (req.session.user) {
     // Переходим на профиль, если пользователь уже авторизирован:
-    return res.redirect('/user/profile/' + req.session.user.id);
+    return res.redirect(302, '/user/profile/' + req.session.user.id);
   }
 
   if (!res.locals.flash) {
