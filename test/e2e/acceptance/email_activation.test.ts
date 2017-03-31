@@ -82,7 +82,7 @@ describe('#2 Подтверждение email', function () {
 
     });
 
-    afterEach(async function() {
+    afterEach(function() {
       // Удаляем пользователя:
       pgdb.querySync('DELETE FROM users WHERE username=$1::text', [login]);
     });

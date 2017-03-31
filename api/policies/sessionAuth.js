@@ -19,10 +19,10 @@ module.exports = function (req, res, next) {
       // (эта проверка, похожая на ту, что в UserController/login.js, сработает
       // здесь, например, в случае, если администратор отменит подтверждение 
       // почты пользователя):
-      delete req.session.user; 
       req.session.flash = {
         email: req.session.user.email
       };
+      delete req.session.user; 
       return res.redirect(302, '/after_register');
     }
 

@@ -25,6 +25,9 @@ module.exports = function register(req, res) {
  * Обработка данных формы регистрации
  */
 function register_POST(req, res) {
+  
+  // Разлогинить (на случай, если залогиненный пользователь регистрирует новый аккаунт):
+  delete req.session.user;
 
   let model = req.allParams();
   model.password = crypto.createHash('sha256').update(model.password).digest('hex');

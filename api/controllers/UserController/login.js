@@ -50,15 +50,8 @@ function login_POST(req, res) {
       };
       return res.redirect(303, 'back');
     }
-    if (!user.active) {
-      // Если пользователь еще не активировал свой email,
-      // направить его на страницу перехода на почтовик:
-      req.session.flash = {
-        email: user.email
-      };
-      return res.redirect(303, '/after_register');
-    }
-    // Успешный вход - перенаправляем на профиль:
+    // Идентификация прошла успешно - перенаправляем на профиль
+    // (при входе на профиль будет проверена авторизация с помощью политики sessionAuth):
     req.session.user = user;
     return res.redirect(303, '/user/profile/' + user.id);
   });
