@@ -11,7 +11,7 @@
 // Если выполнить подключение в таком-же неявном стиле, как это сделано в Sails,
 // то автодополнение не будет работать в Ide:
 
-const requireAndBindActions = require('../requireAndBindActions')
+const requireAndBindActions = require('../requireAndBindActions');
 
 const UserController = requireAndBindActions(__filename);
 
