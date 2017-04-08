@@ -1,7 +1,8 @@
+/* global AuthentificationService */
 
 module.exports = function logout(req, res) {
-  
-  delete req.session.user;
+
+  AuthentificationService.logoutSync({req});
   return res.redirect('/');
-  
+
 };

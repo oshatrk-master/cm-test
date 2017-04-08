@@ -12,7 +12,7 @@ Browser                           UserController  Waterline  nodemailer
   |                                 |
   |                                 +--+ Разбор параметров запроса:
   |                                 |  | model = req.allParams();
-  |                                 |<-+ 
+  |                                 |<-+
   |                                 |
   |                                 | User.create() |          |
   |                                 +-------------->|          |
@@ -44,7 +44,7 @@ Browser                           UserController  Waterline  nodemailer
   |                             +----->|
   |                             |      +--+
   |                             |      |  | res.locals.flash = req.session.flash
-  |                             |      |<-+ 
+  |                             |      |<-+
   |                             |<-----+
   |                             |
   |           [ UserController.after_register() ]
@@ -54,10 +54,10 @@ Browser                           UserController  Waterline  nodemailer
 
   Затем пользователь открывает свой почтовый ящик
   и переходит по предложенной в письме ссылке:
-  
+
 Browser                           UserController  Waterline  nodemailer
   |                                 |               |          |
-  |   GET /register/?id=...&t=...   |               |          |
+  |      GET /confirm/:token        |               |          |
   +-------------------------------->|               |          |
   |                                 | User.findOne()|          |
   |                                 +-------------->|          |
@@ -65,7 +65,8 @@ Browser                           UserController  Waterline  nodemailer
   |                                 |<--------------+          |
   |                                 |
   |                                 +--+
-  |                                 |  | Отмечаем, что пользователь
+  |                                 |  | Проверяем токен, если правильный,
+  |                                 |  | то отмечаем, что пользователь
   |                                 |  | теперь может входить на сайт:
   |                                 |  | user.active = true;
   |                                 |<-+
@@ -77,25 +78,25 @@ Browser                           UserController  Waterline  nodemailer
   |<--------------------------------+               |          |
 ```
 
-2. Если произошла ошибка при обработке запроса `GET /register/?id=...&t=...`.
+2. Если произошла ошибка при обработке запроса `GET /confirm/:token`.
 Например, при работе с базой данных (поиске, либо обновлении записи о пользователе):
 ```
 Browser                           UserController  Waterline  nodemailer
   |                                 |               |          |
-  |                                 |  error  
+  |                                 |  error
   |                                 |<-------O
   |  res.view('/user/error',        |               |          |
   |           {'описание ошибки'})  |               |          |
   |<--------------------------------+               |          |
 ```
 
-3. Если произошла ошибка при обработке запроса `POST /register`. Например, 
+3. Если произошла ошибка при обработке запроса `POST /register`. Например,
 при разборе параметров запроса или при работе с базой данных
 (при создании, либо удалении записи о пользователе):
 ```
 Browser                           UserController  Waterline  nodemailer
   |                                 |               |          |
-  |                                 |  error  
+  |                                 |  error
   |                                 |<-------O
   |                                 |
   |                                 +--+ Запоминаем ошибку и заполненные поля:

@@ -1,4 +1,4 @@
-/* global sails, User */
+/* global AuthentificationService, sails, User */
 
 const crypto = require('crypto');
 
@@ -21,36 +21,22 @@ module.exports = function login(req, res) {
 function login_POST(req, res) {
 
   // Разлогиним, если пользователь залогинен (например, для входа с другим логином):
-  if (req.session.user) delete req.session.user;
+  AuthentificationService.logoutSync({req});
 
   let username = req.param('username');
-  User.findOne({
-    username
-  }).exec(function(error, user) {
+  let password = req.param('password');
+
+  AuthentificationService.authentificate({username, password}, function (error, user) {
     if (error) {
-      sails.log.error(error);
       req.session.flash = {
         user: {
           username
         },
-        error: {
-          message: 'При проверке логина и пароля произошла ошибка.'
-        }
+        error: error.message
       };
       return res.redirect(303, 'back');
     }
-    if (!user || user.password != crypto.createHash('sha256').update(req.param('password')).digest('hex')) {
-      req.session.flash = {
-        user: {
-          username
-        },
-        error: {
-          message: 'Неверный логин или пароль.'
-        }
-      };
-      return res.redirect(303, 'back');
-    }
-    // Идентификация прошла успешно - перенаправляем на профиль
+    // Аутентификация прошла успешно - перенаправляем на профиль
     // (при входе на профиль будет проверена авторизация с помощью политики sessionAuth):
     req.session.user = user;
     return res.redirect(303, '/user/profile/' + user.id);
@@ -62,9 +48,10 @@ function login_POST(req, res) {
  */
 function login_GET(req, res) {
 
-  if (req.session.user) {
+  let session = req.session;
+  if (session && session.user) {
     // Переходим на профиль, если пользователь уже авторизирован:
-    return res.redirect(302, '/user/profile/' + req.session.user.id);
+    return res.redirect(302, '/user/profile/' + session.user.id);
   }
 
   if (!res.locals.flash) {

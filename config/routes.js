@@ -48,6 +48,6 @@ module.exports.routes = {
 
   '/login': {controller: 'UserController', action: 'login'},
   '/logout': {controller: 'UserController', action: 'logout'},
-  '/after_register': {controller: 'UserController', action: 'after_register'}
-
+  '/after_register': {controller: 'UserController', action: 'after_register'},
+  '/confirm/:token?': {controller: 'UserController', action: 'confirm'}
 };
