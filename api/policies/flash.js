@@ -13,6 +13,8 @@ module.exports = function (req, res, next) {
     res.locals.flash = req.session.flash;
     delete req.session.flash;
   }
-  
+
   return next();
 };
+
+// todo: flash по-смыслу не является "политикой авторизации". Лучше сделать его отдельным middleware.
