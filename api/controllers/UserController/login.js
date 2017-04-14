@@ -1,6 +1,7 @@
-/* global AuthentificationService, sails, User */
+/* global _, AuthentificationService, CustomErrorsService, sails, User */
 
 const crypto = require('crypto');
+const CustomErrors = require('../../CustomErrors');
 
 module.exports = function login(req, res) {
 
@@ -28,12 +29,10 @@ function login_POST(req, res) {
 
   AuthentificationService.authentificate({username, password}, function (error, user) {
     if (error) {
-      req.session.flash = {
-        user: {
-          username
-        },
-        error: error.message
-      };
+      let errorType = 'login-error';
+      if (error.name === CustomErrors.IncorrectLoginError.name) errorType = 'login-incorrect';
+      req.flash('errorType', errorType);
+      req.flash('username', username);
       return res.redirect(303, 'back');
     }
     // Аутентификация прошла успешно - перенаправляем на профиль
@@ -54,10 +53,11 @@ function login_GET(req, res) {
     return res.redirect(302, '/user/profile/' + session.user.id);
   }
 
-  if (!res.locals.flash) {
-    res.locals.flash = {
-      user: {}
-    };
-  }
+  res.locals({username: _.head(req.flash('username'))});
+  res.locals({justactivated: _.head(req.flash('justactivated'))});
+  res.locals({errorType: _.head(req.flash('errorType'))});
+
+  res.locals({publicKey: sails.config.authentication.publicKey.replace(/\s/g, '')});
+
   return res.view();
 }

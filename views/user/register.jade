@@ -1,15 +1,21 @@
 extends ../layout
 
+-
+  /** @type {?{code:String,message:String,invalidAttributes:?{errors,errAttr}}} */
+  var error; // Если код ошибки равен 'E_VALIDATION', то содержит массив invalidAttributes
+  /** @type {{username:?String,firstname:?String,lastname:?String,email:?String}} */
+  var user; // Объект user должен передаваться в это представление всегда (хоть и может быть пустым).
+
 block body
   nav.navbar.navbar-default
     .container-fluid
       .navbar-header
         span.navbar-brand Регистрация
 
-  if flash.error
-    .alert.alert-danger(role="alert")= flash.error.message
-      if flash.error.code === 'E_VALIDATION'
-        each errors, errAttr in flash.error.invalidAttributes
+  if error
+    .alert.alert-danger(role="alert")= error.message
+      if error.code === 'E_VALIDATION'
+        each errors, errAttr in error.invalidAttributes
           //- p= '[ ' + errAttr + ' ]:'
           pre
             each err in errors
@@ -19,26 +25,26 @@ block body
     .form-group
       label.col-sm-3(for="username") Логин
       .col-sm-9
-        input#username.form-control(type="text", name="username", placeholder="Логин", required, 
-                                    value=flash.user.username)
+        input#username.form-control(type="text", name="username", placeholder="Логин", required,
+                                    value=user.username)
     .form-group
-      label.col-sm-3(for="pasword") Пароль
+      label.col-sm-3(for="password") Пароль
       .col-sm-9
         input#password.form-control(type="password", name="password", placeholder="Пароль", required)
     .form-group
       label.col-sm-3(for="firstname") Имя
       .col-sm-9
         input#firstname.form-control(type="text", name="firstname", placeholder="Имя", required,
-                                     value=flash.user.firstname)
+                                     value=user.firstname)
     .form-group
       label.col-sm-3(for="lastname") Фамилия
       .col-sm-9
         input#lastname.form-control(type="text", name="lastname", placeholder="Фамилия",
-                                    value=flash.user.lastname)
+                                    value=user.lastname)
     .form-group
       label.col-sm-3(for="email") Электронная почта
       .col-sm-9
         input#email.form-control(type="email", name="email", placeholder="Электронная почта", required,
-                                 value=flash.user.email)
+                                 value=user.email)
     .form-group
       input(type="submit", value="Зарегистрироваться")

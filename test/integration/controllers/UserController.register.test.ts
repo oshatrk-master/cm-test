@@ -22,10 +22,11 @@ describe('UserController.register()', function () {
         method: "GET",
         param: function () {
           return false;
-        }
+        },
+        flash: sinon.spy()
       }, {
         view: view,
-        locals: {}
+        locals: sinon.spy()
       });
       assert.ok(view.called);
       done();

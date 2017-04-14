@@ -1,4 +1,4 @@
-/* global AuthentificationService, sails, User */
+/* global _, AuthentificationService, sails, User */
 
 module.exports = function register(req, res) {
 
@@ -33,13 +33,18 @@ function register_POST(req, res) {
       if (error) {
         sails.log.error(error);
         delete model.password;
-        req.session.flash = {
-          user: model,
-          error: {
-            message: 'При регистрации пользователя произошла ошибка.',
-            code: error.code
-          }
-        };
+
+        req.flash('error', {
+          message: 'При регистрации пользователя произошла ошибка.',
+          code: error.code
+        });
+        req.flash('user', {
+          username: model.username,
+          firstname: model.firstname,
+          lastname: model.lastname,
+          email: model.email
+        });
+
         return res.redirect(303, 'back');
       }
 
@@ -49,19 +54,26 @@ function register_POST(req, res) {
       User.create(model, function (error, data) {
         if (error) {
           delete model.password;
-          req.session.flash = {
-            user: model,
-            error: {
-              message: 'При регистрации пользователя произошла ошибка.',
-              code: error.code
-            }
+
+          let err4flash = {
+            message: 'При регистрации пользователя произошла ошибка.',
+            code: error.code
           };
           if (error.code === 'E_VALIDATION') {
-            req.session.flash.error.invalidAttributes = error.invalidAttributes;
+            err4flash.invalidAttributes = error.invalidAttributes;
           }
           else {
             sails.log.error(error);
           }
+          req.flash('error', err4flash);
+
+          req.flash('user', {
+            username: model.username,
+            firstname: model.firstname,
+            lastname: model.lastname,
+            email: model.email
+          });
+
           return res.redirect(303, 'back');
         }
 
@@ -87,7 +99,7 @@ function register_POST(req, res) {
            *       78 символов (RFC 2822) и не содержала символов '='
            *       тогда ее можно сразу брать из mail (в терминале).
            */
-          'Please activate Your account using this link:\n\n' + activationLink+'\n\n',
+          'Please activate Your account using this link:\n\n' + activationLink + '\n\n',
           /** @todo Вынести шаблон письма в отдельный файл, локализовать. */
           html: `<!DOCTYPE html>
 <html lang="ru-RU">
@@ -105,29 +117,39 @@ function register_POST(req, res) {
         // Отправляем письмо:
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
-            delete model.password;
-            req.session.flash = {
-              user: model,
-              error: {
-                message: 'При отправке почтового сообщения произошла ошибка.',
-                code: error.code
-              }
-            };
             sails.log.error(error);
-            // Удаляем только-что созданную запись:
+            delete model.password;
+
+            req.flash('error', {
+              message: 'При отправке почтового сообщения произошла ошибка.',
+              code: error.code
+            });
+            req.flash('user', {
+              username: model.username,
+              firstname: model.firstname,
+              lastname: model.lastname,
+              email: model.email
+            });
+
+            // При ошибке нужно удалить только-что созданную запись:
             User.destroy({
               id: data.id
             }).exec(function (error) {
               if (error) {
-                delete model.password;
-                req.session.flash = {
-                  user: model,
-                  error: {
-                    message: 'При регистрации пользователя произошла ошибка.',
-                    code: error.code
-                  }
-                };
                 sails.log.error(error);
+                delete model.password;
+
+                req.flash('error', {
+                  message: 'При регистрации пользователя произошла ошибка.',
+                  code: error.code
+                });
+                req.flash('user', {
+                  username: model.username,
+                  firstname: model.firstname,
+                  lastname: model.lastname,
+                  email: model.email
+                });
+
                 return res.redirect(303, 'back');
               }
               return res.redirect(303, '/login');
@@ -136,9 +158,7 @@ function register_POST(req, res) {
           }
 
           // Все ОК, перенаправляем на страницу с просьбой подтверждить email:
-          req.session.flash = {
-            email: model.email
-          };
+          req.flash('email', model.email);
           return res.redirect(303, '/after_register');
         });
       });
@@ -152,19 +172,20 @@ function register_POST(req, res) {
  */
 function register_GET(req, res) {
 
-  if (!res.locals.flash) {
-    // В шаблоне используются выражения вида 'flash.username'
-    // Если res.locals.flash не определена, то шаблон выдаст ошибку
-    // при использовании 'flash.user.username'. Чтобы в шаблоне не писать
-    // везде "value=flash&&flash.user?flash.user.username:''",
-    // инициализируем flash.user пустым объектом. При неявном приведении
+  res.locals({error: _.head(req.flash('error'))});
+  res.locals({user: _.head(req.flash('user'))});
+
+  if (!res.locals.user) {
+    // В шаблоне используются выражения вида 'user.username'
+    // Если res.locals.user не определена, то шаблон выдаст ошибку
+    // при использовании 'user.username'. Чтобы в шаблоне не писать
+    // везде "value=user?flash.user.username:''",
+    // инициализируем res.locals.user пустым объектом. При неявном приведении
     // undefined к строковому типу получаем пустую строку, то есть можно
-    // без проблем использовать в шаблоне 'flash.username' (если только
-    // не приводить к строке явно, например ''+flash.username
-    // станет 'undefined' в этом случае).
-    res.locals.flash = {
-      user: {}
-    };
+    // без проблем использовать в шаблоне 'user.username' (если только
+    // не приводить к строке явно, например ''+user.username
+    // станет "undefined" в этом случае).
+    res.locals({user: {}});
   }
   return res.view();
 }

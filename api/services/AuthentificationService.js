@@ -1,5 +1,6 @@
 /* global sails, User */
 const crypto = require('crypto');
+const CustomErrors = require('../CustomErrors');
 
 /**
  * В этом модуле собраны функции аутентификации -
@@ -59,14 +60,17 @@ module.exports = {
     if (password.length > this.maxPasswordLength)
       password = password.substr(0, this.maxPasswordLength);
 
-    // Генерирация хеша пароля замедлена до ~0.01 секунды (по сравнению
+    // Генерирация хеша пароля замедлена до ~1 секунды (по сравнению
     // со слишком быстрой sha256):
-    crypto.pbkdf2(password, salt, 5000, 64, 'sha512', (error, key) => {
+    crypto.pbkdf2(password, salt, 500000, 64, 'sha512', (error, key) => {
       if (error)
         return callback(error);
 
       return callback(null, salt + this.hashDelimiter + key.toString('base64'));
     });
+    // todo: вынести аутентификацию на отдельные ноды
+    // (из-за того, что расчеты хешей паролей должны занимать продолжительное
+    // время, процессы аутентификации являются удобным объектом для DOS-атак)
   },
 
   /**
@@ -114,7 +118,7 @@ module.exports = {
     }).exec((error, user) => {
       if (error) {
         sails.log.error(error);
-        return callback(Error('При проверке логина и пароля произошла ошибка.'));
+        return callback(error);
       }
       let salt;
       if (!user) {
@@ -131,11 +135,11 @@ module.exports = {
       }, function (error, saltAndHash) {
         if (error) {
           sails.log.error(error);
-          return callback(Error('При проверке логина и пароля произошла ошибка.'));
+          return callback(error);
         }
         if (!user || user.password !== saltAndHash) {
-          // Пароль неправильный
-          return callback(Error('Неверный логин или пароль.'));
+          // Неверный логин или пароль:
+          return callback(new CustomErrors.IncorrectLoginError());
         }
         return callback(null, user);
       });

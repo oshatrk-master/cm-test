@@ -14,12 +14,8 @@ module.exports = function confirm(req, res) {
     }
 
     // После редиректа на форму входа, поле логина уже будет заполнено:
-    req.session.flash = {
-      justactivated: true,
-      user: {
-        username: user.username
-      }
-    };
+    req.flash('justactivated', true);
+    req.flash('username', user.username);
     return res.redirect(302, '/login');
   });
 

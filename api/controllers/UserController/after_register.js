@@ -22,11 +22,12 @@ let domain2mailer = _.zipObject(_.flatten(
     mailer[1].map((d) => [d, mailer[0]]))
 ));
 
+
 module.exports = function after_register(req, res) {
   let mailers = known_mailers.map((mailer) => mailer[0]);
 
-  if (res.locals.flash) {
-    let email = res.locals.flash.email;
+  let email = _.head(req.flash('email'));
+  if (email) {
     let emailDomain = email.slice(email.indexOf('@') + 1);
     let mailerUrl = domain2mailer[emailDomain];
     if (mailerUrl) {
@@ -37,9 +38,9 @@ module.exports = function after_register(req, res) {
     }
     else {
       // Указываем вероятный адрес почтовика пользователя:
-      res.locals.unknownMailer = ('https://' + encodeURIComponent(emailDomain));
+      res.locals({unknownMailer: ('https://' + encodeURIComponent(emailDomain))});
     }
   }
-  res.locals.mailers = mailers;
+  res.locals({mailers});
   return res.view();
 };

@@ -1,5 +1,15 @@
 extends ../layout
 
+-
+  /** @type {?String} */
+  var errorType; // Один из типов ошибки: 'login-error' или 'login-incorrect'
+  /** @type {?Boolean} */
+  var justactivated; // true, сразу после подтверждения email
+  /**  @type {?String}} */
+  var username; // логин, чтобы не вводить пользователю
+  /**  @type {String} */
+  var publicKey; // открытый ключ сервера, которым будет зашифрован пароль перед отправкой на сервер
+
 block body
   .row
     .col-sm-3
@@ -8,25 +18,33 @@ block body
         .panel-heading
           h1.panel-title Введите логин и пароль
         .panel-body
-          if flash.justactivated
+          if justactivated
             .alert.alert-success(role="alert")= __('Your account is activated successfully')
-          if flash.error
-            .alert.alert-danger(role="alert")= flash.error.message
+          if (errorType === 'login-error')
+            .alert.alert-danger(role="alert")= __('An error occurred while trying to sign-in')
+          if (errorType === 'login-incorrect')
+            .alert.alert-danger(role="alert")= __('Incorrect login or password')
           form.form-horizontal(action="", method="POST")
             .form-group
               label.col-sm-2(for="login") Логин
               .col-sm-10
                 input#login.form-control(type="text", name="username", required,
-                                         value=flash.user.username,
-                                         autofocus=!flash.justactivated)
+                                         value=username,
+                                         autofocus=!username)
             .form-group
               label.col-sm-2(for="password") Пароль
               .col-sm-10
                 input#password.form-control(type="password", name="password", required,
-                                            autofocus=!!flash.justactivated)
+                                            autofocus=!!username)
             .form-group
               .col-sm-12
                 input.form-control(type="submit", value="Войти")
           p.text-center
             a(href="/user/register") Регистрация нового пользователя
     .col-sm-3
+
+block scripts
+  script(type="text/javascript").
+    var serverPublicKey = "#{publicKey}";
+  script(src="/js/dependencies/digitalbazaar/0.7.1/forge.min.js")
+  script(src="/js/login.js")

@@ -1,4 +1,6 @@
 {
   "Developer Name": "Олег Щукин",
-  "Your account is activated successfully": "Ваш аккаунт успешно активирован"
+  "Your account is activated successfully": "Ваш аккаунт успешно активирован",
+  "An error occurred while trying to sign-in": "При проверке логина и пароля произошла ошибка",
+  "Incorrect login or password": "Неверный логин или пароль"
 }
