@@ -5,6 +5,8 @@ extends ../layout
   var error; // Если код ошибки равен 'E_VALIDATION', то содержит массив invalidAttributes
   /** @type {{username:?String,firstname:?String,lastname:?String,email:?String}} */
   var user; // Объект user должен передаваться в это представление всегда (хоть и может быть пустым).
+  /**  @type {String} */
+  var publicKey; // открытый ключ сервера, которым будет зашифрован пароль перед отправкой на сервер
 
 block body
   nav.navbar.navbar-default
@@ -48,3 +50,16 @@ block body
                                  value=user.email)
     .form-group
       input(type="submit", value="Зарегистрироваться")
+
+block scripts
+  script(src="/js/dependencies/digitalbazaar/0.7.1/forge.min.js")
+  script.
+    var serverPublicKeyPem = "#{publicKey}";
+    forge.options.usePureJavaScript = true;
+
+    $(function () {
+      $('form').on('submit', function(event) {
+        var serverPublicKey = forge.pki.publicKeyFromPem(serverPublicKeyPem);
+        password.value = forge.util.encode64(serverPublicKey.encrypt(password.value));
+      });
+    });

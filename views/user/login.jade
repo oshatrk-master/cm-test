@@ -44,7 +44,14 @@ block body
     .col-sm-3
 
 block scripts
-  script(type="text/javascript").
-    var serverPublicKey = "#{publicKey}";
   script(src="/js/dependencies/digitalbazaar/0.7.1/forge.min.js")
-  script(src="/js/login.js")
+  script.
+    var serverPublicKeyPem = "#{publicKey}";
+    console.log('serverPublicKeyPem: ',serverPublicKeyPem);
+    $(function () {
+      $('form').on('submit', function(event) {
+        var serverPublicKey = forge.pki.publicKeyFromPem(serverPublicKeyPem);
+        password.value = forge.util.encode64(serverPublicKey.encrypt(password.value));
+      });
+    });
+  //- script(src="/js/login.js")

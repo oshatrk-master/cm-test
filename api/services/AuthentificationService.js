@@ -56,6 +56,16 @@ module.exports = {
     if (!password) return callback(TypeError('Empty password'));
     if (!salt) return callback(TypeError('Empty salt'));
 
+    // Расшифровываем пароль:
+    try {
+      password = crypto.privateDecrypt({
+        key: sails.config.authentication.privateKey,
+        padding: crypto.constants.RSA_PKCS1_PADDING
+      }, Buffer.from(password, 'base64')).toString('utf8');
+    } catch (error) {
+      return callback(error);
+    }
+
     // Ограничиваем длину пароля (запрет мегабайтных паролей)
     if (password.length > this.maxPasswordLength)
       password = password.substr(0, this.maxPasswordLength);
@@ -117,7 +127,7 @@ module.exports = {
       username
     }).exec((error, user) => {
       if (error) {
-        sails.log.error(error);
+        sails.log.error(`(username=${username})`, error);
         return callback(error);
       }
       let salt;
@@ -134,7 +144,7 @@ module.exports = {
         salt
       }, function (error, saltAndHash) {
         if (error) {
-          sails.log.error(error);
+          sails.log.error(`(username=${username})`, error);
           return callback(error);
         }
         if (!user || user.password !== saltAndHash) {
@@ -221,7 +231,7 @@ module.exports = {
 
       if (error) {
         // Ошибка при работе с базой данных
-        sails.log.error(error);
+        sails.log.error(`(id=${id})`, error);
         return callback(Error('При активации пользователя произошла ошибка.'));
       }
 
@@ -245,7 +255,7 @@ module.exports = {
         active: true
       }).exec(function (error) {
         if (error) {
-          sails.log.error(error);
+          sails.log.error(`(id=${id})`, error);
           return callback(Error('При активации пользователя произошла ошибка.'));
         }
 

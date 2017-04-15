@@ -172,8 +172,8 @@ function register_POST(req, res) {
  */
 function register_GET(req, res) {
 
-  res.locals({error: _.head(req.flash('error'))});
-  res.locals({user: _.head(req.flash('user'))});
+  res.locals.error = _.head(req.flash('error'));
+  res.locals.user = _.head(req.flash('user'));
 
   if (!res.locals.user) {
     // В шаблоне используются выражения вида 'user.username'
@@ -185,7 +185,10 @@ function register_GET(req, res) {
     // без проблем использовать в шаблоне 'user.username' (если только
     // не приводить к строке явно, например ''+user.username
     // станет "undefined" в этом случае).
-    res.locals({user: {}});
+    res.locals.user = {};
   }
+
+  res.locals.publicKey = sails.config.authentication.publicKey.replace(/\n/g, "\\n");
+
   return res.view();
 }

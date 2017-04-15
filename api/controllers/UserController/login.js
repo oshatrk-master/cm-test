@@ -53,11 +53,11 @@ function login_GET(req, res) {
     return res.redirect(302, '/user/profile/' + session.user.id);
   }
 
-  res.locals({username: _.head(req.flash('username'))});
-  res.locals({justactivated: _.head(req.flash('justactivated'))});
-  res.locals({errorType: _.head(req.flash('errorType'))});
+  res.locals.username = _.head(req.flash('username'));
+  res.locals.justactivated = _.head(req.flash('justactivated'));
+  res.locals.errorType = _.head(req.flash('errorType'));
 
-  res.locals({publicKey: sails.config.authentication.publicKey.replace(/\s/g, '')});
+  res.locals.publicKey = sails.config.authentication.publicKey.replace(/\n/g, "\\n");
 
   return res.view();
 }

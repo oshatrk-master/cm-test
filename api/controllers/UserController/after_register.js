@@ -38,9 +38,9 @@ module.exports = function after_register(req, res) {
     }
     else {
       // Указываем вероятный адрес почтовика пользователя:
-      res.locals({unknownMailer: ('https://' + encodeURIComponent(emailDomain))});
+      res.locals.unknownMailer = 'https://' + encodeURIComponent(emailDomain);
     }
   }
-  res.locals({mailers});
+  res.locals.mailers = mailers;
   return res.view();
 };
