@@ -149,7 +149,7 @@ module.exports = {
         }
         if (!user || user.password !== saltAndHash) {
           // Неверный логин или пароль:
-          return callback(new CustomErrors.IncorrectLoginError());
+          return callback(CustomErrors.IncorrectLoginError());
         }
         return callback(null, user);
       });

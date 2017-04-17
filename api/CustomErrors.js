@@ -21,5 +21,5 @@ class IncorrectLoginError extends ExtendableError {}
 * @class CustomErrors
 */
 module.exports = {
-  IncorrectLoginError
+  IncorrectLoginError: function(...args) {return new IncorrectLoginError(...args);}
 };
